@@ -1,19 +1,18 @@
 'use client';
 
 import { useEffect } from 'react';
-import { ThemeProvider, useTheme } from '@/app/component/ThemeContext';
+import { useTheme } from '@/app/component/ThemeContext';
 import HeroSection from './components/HeroSection';
 import ServicesSection from './components/ServicesSection';
 
-function PageContent() {
+export default function Home() {
   const { setActiveSection, activeSection, isDark } = useTheme();
 
-  // Add this console log to debug
   console.log('Active Section:', activeSection, 'Is Dark:', isDark);
 
   useEffect(() => {
     const sections = document.querySelectorAll('[data-section]');
-    console.log('Found sections:', sections.length); // Debug log
+    console.log('Found sections:', sections.length);
     
     const observerOptions = {
       root: null,
@@ -25,7 +24,7 @@ function PageContent() {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           const sectionId = entry.target.getAttribute('data-section');
-          console.log('Section in view:', sectionId); // Debug log
+          console.log('Section in view:', sectionId);
           if (sectionId) {
             setActiveSection(sectionId);
           }
@@ -44,13 +43,5 @@ function PageContent() {
       <HeroSection />
       <ServicesSection />
     </>
-  );
-}
-
-export default function Home() {
-  return (
-    <ThemeProvider>
-      <PageContent />
-    </ThemeProvider>
   );
 }
