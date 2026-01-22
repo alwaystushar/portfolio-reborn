@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { animatePageIn } from '@/app/lib/animations';
 import { useTheme } from '@/app/component/ThemeContext';
 import { usePathname } from 'next/navigation';
@@ -8,23 +8,21 @@ import { usePathname } from 'next/navigation';
 export default function Template({ children }: { children: React.ReactNode }) {
   const { isDark } = useTheme();
   const pathname = usePathname();
-  const [isAnimating, setIsAnimating] = useState(true);
 
   useEffect(() => {
-    setIsAnimating(true);
-    animatePageIn();
+    // Multiple methods to ensure scroll to top
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
     
-    // Reset animation state after transition completes
-    const timer = setTimeout(() => {
-      setIsAnimating(false);
-    }, 1200); // Slightly longer than animation duration
-
-    return () => clearTimeout(timer);
-  }, [pathname]); // Re-run when pathname changes
+    // Also use scrollTo with options
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' } as any);
+    
+    animatePageIn();
+  }, [pathname]);
 
   return (
     <div className="relative">
-      {/* Transition banners */}
       <div
         id="banner-1"
         className={`min-h-screen z-[9999] fixed top-0 left-0 w-1/4 pointer-events-none transition-colors ${
@@ -50,7 +48,6 @@ export default function Template({ children }: { children: React.ReactNode }) {
         }`}
       />
 
-      {/* Content wrapper */}
       <div className="relative z-10">
         {children}
       </div>

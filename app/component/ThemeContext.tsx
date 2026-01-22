@@ -2,11 +2,6 @@
 
 import { createContext, useContext, useState, ReactNode, useEffect, useRef } from 'react';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
-
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
 interface ThemeContextType {
   activeSection: string;
@@ -19,109 +14,79 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [activeSection, setActiveSection] = useState<string>('section1');
   const bgRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
+  const lastSectionRef = useRef<string>('section1'); // Track last section
 
   const darkSections = ['section2'];
   const isDark = darkSections.includes(activeSection);
 
   useEffect(() => {
-    // Small delay to ensure Lenis is initialized
-    const timer = setTimeout(() => {
-      const sections = document.querySelectorAll('[data-section]');
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      const windowHeight = window.innerHeight;
       
-      sections.forEach((section, i) => {
-        const sectionElement = section as HTMLElement;
-        const bgColor = sectionElement.dataset.bgcolor || '#F0F2F4';
-        const sectionId = sectionElement.dataset.section || '';
+      // Get all sections
+      const section1 = document.querySelector('[data-section="section1"]') as HTMLElement;
+      const section2 = document.querySelector('[data-section="section2"]') as HTMLElement;
+      
+      if (!section1 || !section2) return;
+      
+      const section1Height = section1.offsetHeight;
+      
+      // Determine active section based on scroll position
+      let newSection = 'section1';
+      let newBgColor = '#ffffff';
+      
+      // If we've scrolled past half of section1's height, switch to section2
+      if (scrollY > section1Height / 2) {
+        newSection = 'section2';
+        newBgColor = '#000000';
+      }
+      
+      // Only update if section changed
+      if (lastSectionRef.current !== newSection) {
+        console.log('Switching from', lastSectionRef.current, 'to', newSection, 'ScrollY:', scrollY);
         
-        const prevBg = i === 0 ? '#F0F2F4' : (sections[i - 1] as HTMLElement).dataset.bgcolor || '#F0F2F4';
-
-        // Determine text color based on background brightness
-        const getTextColor = (bg: string) => {
-          const hex = bg.replace('#', '');
-          const r = parseInt(hex.substr(0, 2), 16);
-          const g = parseInt(hex.substr(2, 2), 16);
-          const b = parseInt(hex.substr(4, 2), 16);
-          const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-          return brightness > 128 ? '#000000' : '#ffffff';
-        };
-
-        const textColor = getTextColor(bgColor);
-        const prevTextColor = getTextColor(prevBg);
-
-        ScrollTrigger.create({
-          trigger: sectionElement,
-          start: 'top 50%',
-          end: 'bottom 50%',
-          // markers: true,
-          onEnter: () => {
-            setActiveSection(sectionId);
-            gsap.to(bgRef.current, {
-              backgroundColor: bgColor,
-              duration: 1,
-              ease: 'power2.inOut',
-              overwrite: 'auto'
-            });
-            gsap.to(contentRef.current, {
-              color: textColor,
-              duration: 1,
-              ease: 'power2.inOut',
-              overwrite: 'auto'
-            });
-          },
-          onLeaveBack: () => {
-            if (i > 0) {
-              const prevSectionId = (sections[i - 1] as HTMLElement).dataset.section || '';
-              setActiveSection(prevSectionId);
-              gsap.to(bgRef.current, {
-                backgroundColor: prevBg,
-                duration: 1,
-                ease: 'power2.inOut',
-                overwrite: 'auto'
-              });
-              gsap.to(contentRef.current, {
-                color: prevTextColor,
-                duration: 1,
-                ease: 'power2.inOut',
-                overwrite: 'auto'
-              });
-            }
-          }
+        lastSectionRef.current = newSection;
+        setActiveSection(newSection);
+        
+        gsap.to(bgRef.current, {
+          backgroundColor: newBgColor,
+          duration: 1,
+          ease: 'power2.inOut',
         });
-      });
+      }
+    };
 
-      ScrollTrigger.refresh();
-    }, 100);
+    // Throttle scroll events
+    let ticking = false;
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    
+    // Initial check
+    setTimeout(handleScroll, 100);
 
     return () => {
-      clearTimeout(timer);
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      window.removeEventListener('scroll', onScroll);
     };
-  }, []);
+  }, []); // Empty dependency array - no infinite loop!
 
   return (
     <ThemeContext.Provider value={{ activeSection, setActiveSection, isDark }}>
-      {/* Fixed smooth-transitioning background */}
       <div 
         ref={bgRef}
         className="fixed inset-0 -z-10"
-        style={{ backgroundColor: '#F0F2F4' }}
+        style={{ backgroundColor: '#ffffff' }}
       />
-      
-      {/* Content with smooth color transitions */}
-      <div 
-        ref={contentRef}
-        className="relative z-0"
-        style={{ 
-          color: '#000000',
-          textRendering: 'optimizeLegibility',
-          WebkitFontSmoothing: 'subpixel-antialiased',
-          MozOsxFontSmoothing: 'auto',
-          fontSmooth: 'always'
-        }}
-      >
-        {children}
-      </div>
+      {children}
     </ThemeContext.Provider>
   );
 }

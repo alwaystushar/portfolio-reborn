@@ -3,9 +3,9 @@ export default function ServicesSection() {
     <section 
       data-section="section2"
       data-bgcolor="#000000"
-      className="min-h-[150vh] flex items-center justify-center px-8"
+      className="relative z-20 min-h-[150vh] flex items-center justify-center px-8 bg-black"
     >
-      <div className="text-center max-w-4xl">
+      <div className="text-center max-w-4xl text-white">
         <h1 className="text-5xl font-bold mb-8">Our Services</h1>
         <p className="text-xl mb-6">Tall section - 150vh with more content</p>
         <div className="space-y-4">

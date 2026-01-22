@@ -46,3 +46,10 @@ html.lenis, html.lenis body {
 .lenis.lenis-scrolling iframe {
   pointer-events: none;
 }
+
+
+[style*="mix-blend-mode"] {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}

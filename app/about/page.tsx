@@ -1,4 +1,5 @@
 import TransitionLink from '@/app/component/TransitionLink';
+import TextReveal from '@/app/component/TextReveal';
 
 export default function About() {
   return (
@@ -18,6 +19,10 @@ export default function About() {
         >
           ← Back to Home
         </TransitionLink>
+
+        <TextReveal className="text-6xl font-bold text-center">
+        <h1>Welcome to Our Website</h1>
+      </TextReveal>
       </div>
     </section>
   );
