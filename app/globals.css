@@ -1,5 +1,35 @@
 @import "tailwindcss";
 
+
+
+:root {
+  /* Desktop (1440px) */
+  --space-6: 0.42vw;
+  --space-8: 0.56vw;
+  --space-12: 0.83vw;
+  --space-24: 1.67vw;
+  --space-32: 2.22vw;
+  --space-64: 4.44vw;
+  --space-72: 5vw;
+  --space-96: 6.67vw;
+  --space-128: 8.89vw;
+}
+
+/* Mobile (375px) */
+@media (max-width: 1024px) {
+  :root {
+    --space-6: 1.6vw;
+    --space-8: 2.13vw;
+    --space-12: 3.2vw;
+    --space-24: 6.4vw;
+    --space-32: 8.53vw;
+    --space-64: 17.07vw;
+    --space-72: 19.2vw;
+    --space-96: 25.6vw;
+    --space-128: 34.13vw;
+  }
+}
+
 * {
   -webkit-font-smoothing: subpixel-antialiased;
   -moz-osx-font-smoothing: auto;
@@ -10,6 +40,8 @@ body {
   font-smooth: always;
   -webkit-font-smoothing: subpixel-antialiased;
   -moz-osx-font-smoothing: auto;
+  /* Enable predictable `mix-blend-mode` compositing */
+  isolation: isolate;
 }
 
 /* Hide scrollbar globally for scrolling elements only */
@@ -48,8 +80,21 @@ html.lenis, html.lenis body {
 }
 
 
+/* Important:
+   `mix-blend-mode` needs to blend with what's *behind* the element.
+   Avoid forcing a transform on blended elements, because transforms create a new
+   stacking/containing context and often break blending (notably on fixed headers). */
 [style*="mix-blend-mode"] {
-  will-change: transform;
-  transform: translateZ(0);
   backface-visibility: hidden;
 }
+
+
+
+/* Coustom Classes */
+
+/* Container */
+
+.girder{
+  @apply lg:grid-cols-12 grid-cols-4;
+}
+

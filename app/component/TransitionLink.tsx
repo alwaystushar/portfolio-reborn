@@ -14,6 +14,14 @@ interface TransitionLinkProps {
   className?: string;
   variant?: ButtonVariant;
   showIcon?: boolean;
+  icon?: React.ReactNode;
+  iconBoxClassName?: string;
+  iconClassName?: string;
+  animateIcon?: boolean;
+  animateText?: boolean;
+  textClassName?: string;
+  target?: React.HTMLAttributeAnchorTarget;
+  rel?: string;
 }
 
 export default function TransitionLink({ 
@@ -21,14 +29,22 @@ export default function TransitionLink({
   children, 
   className = "",
   variant = "dark",
-  showIcon = false
+  showIcon = false,
+  icon,
+  iconBoxClassName = "",
+  iconClassName = "",
+  animateIcon = true,
+  animateText = true,
+  textClassName = "",
+  target,
+  rel
 }: TransitionLinkProps) {
   const router = useRouter();
   const pathname = usePathname();
   
   const buttonRef = useRef<HTMLAnchorElement>(null);
   const iconBoxRef = useRef<HTMLDivElement>(null);
-  const arrowRef = useRef<SVGSVGElement>(null);
+  const iconRef = useRef<HTMLSpanElement>(null);
   const textContainerRef = useRef<HTMLDivElement>(null);
   const textTopRef = useRef<HTMLSpanElement>(null);
   const textBottomRef = useRef<HTMLSpanElement>(null);
@@ -42,19 +58,22 @@ export default function TransitionLink({
   useEffect(() => {
     const button = buttonRef.current;
     const iconBox = iconBoxRef.current;
-    const arrow = arrowRef.current;
+    const iconEl = iconRef.current;
     const textTop = textTopRef.current;
     const textBottom = textBottomRef.current;
 
-    if (!button || !textTop || !textBottom) return;
-    if (showIcon && (!iconBox || !arrow)) return;
+    if (!button) return;
+    if (animateText && (!textTop || !textBottom)) return;
+    if (showIcon && animateIcon && (!iconBox || !iconEl)) return;
 
-    // Set initial state for bottom text
-    gsap.set(textBottom, { y: "100%" });
+    if (animateText && textBottom) {
+      // Set initial state for bottom text
+      gsap.set(textBottom, { y: "100%" });
+    }
 
     const tl = gsap.timeline({ paused: true });
 
-    if (showIcon && iconBox && arrow) {
+    if (showIcon && animateIcon && iconBox && iconEl) {
       tl.to(iconBox, {
         scale: 1.05,
         backgroundColor: variant === "dark" 
@@ -63,23 +82,25 @@ export default function TransitionLink({
         duration: 0.3,
         ease: "power2.out",
       }, 0)
-      .to(arrow, {
+      .to(iconEl, {
         x: "0.3vw",
         duration: 0.3,
         ease: "power2.out",
       }, 0);
     }
 
-    tl.to(textTop, {
-      y: "-100%",
-      duration: 0.3,
-      ease: "power2.out",
-    }, 0)
-    .to(textBottom, {
-      y: "0%",
-      duration: 0.3,
-      ease: "power2.out",
-    }, 0);
+    if (animateText && textTop && textBottom) {
+      tl.to(textTop, {
+        y: "-100%",
+        duration: 0.3,
+        ease: "power2.out",
+      }, 0)
+      .to(textBottom, {
+        y: "0%",
+        duration: 0.3,
+        ease: "power2.out",
+      }, 0);
+    }
 
     const handleMouseEnter = () => tl.play();
     const handleMouseLeave = () => tl.reverse();
@@ -92,9 +113,12 @@ export default function TransitionLink({
       button.removeEventListener("mouseleave", handleMouseLeave);
       tl.kill();
     };
-  }, [variant, showIcon]);
+  }, [variant, showIcon, animateIcon, animateText]);
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (target === "_blank") {
+      return;
+    }
     e.preventDefault();
     if (pathname !== href) {
       animatePageOut(href, router);
@@ -123,41 +147,51 @@ export default function TransitionLink({
         ref={buttonRef}
         href={href} 
         onClick={handleClick} 
+        target={target}
+        rel={rel}
         className={`inline-flex items-center gap-4 cursor-pointer bg-transparent ${className}`}
         prefetch={true}
       >
-        <div
-          ref={textContainerRef}
-          className="relative overflow-hidden h-10"
-        >
-          <span ref={textTopRef} className={`block font-light tracking-wide ${styles.text}`}>
+        {animateText ? (
+          <div
+            ref={textContainerRef}
+            className="relative overflow-hidden h-10"
+          >
+            <span ref={textTopRef} className={`block font-light tracking-wide ${styles.text} ${textClassName}`}>
+              {children}
+            </span>
+            <span ref={textBottomRef} className={`block font-light tracking-wide ${styles.text} ${textClassName} absolute top-0 left-0`}>
+              {children}
+            </span>
+          </div>
+        ) : (
+          <span className={`font-light tracking-wide ${styles.text} ${textClassName}`}>
             {children}
           </span>
-          <span ref={textBottomRef} className={`block font-light tracking-wide ${styles.text} absolute top-0 left-0`}>
-            {children}
-          </span>
-        </div>
+        )}
         <div
           ref={iconBoxRef}
-          className={`flex items-center justify-center w-10 h-10 rounded ${styles.iconBox}`}
+          className={`flex items-center justify-center w-10 h-10 rounded ${styles.iconBox} ${iconBoxClassName}`}
         >
-          <svg
-            ref={arrowRef}
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
-            fill="none"
-            className={styles.iconColor}
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M3 8H13M13 8L8 3M13 8L8 13"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          <span ref={iconRef} className={`flex items-center ${styles.iconColor} ${iconClassName}`}>
+            {icon ?? (
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M3 8H13M13 8L8 3M13 8L8 13"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            )}
+          </span>
         </div>
       </Link>
     );
@@ -169,14 +203,16 @@ export default function TransitionLink({
       ref={buttonRef}
       href={href} 
       onClick={handleClick} 
+      target={target}
+      rel={rel}
       className={`inline-block cursor-pointer ${className}`}
       prefetch={true}
     >
       <div className="relative overflow-hidden">
-        <span ref={textTopRef} className="block">
+        <span ref={textTopRef} className={`block ${textClassName}`}>
           {children}
         </span>
-        <span ref={textBottomRef} className="block absolute top-0 left-0">
+        <span ref={textBottomRef} className={`block absolute top-0 left-0 ${textClassName}`}>
           {children}
         </span>
       </div>

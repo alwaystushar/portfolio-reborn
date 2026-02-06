@@ -2,11 +2,17 @@
 
 import { useEffect, useRef, useState, ReactNode } from "react";
 import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SplitType from "split-type";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 interface TextRevealProps {
   children: ReactNode;
   className?: string;
+  wrapperClassName?: string;
   delay?: number;
   duration?: number;
   triggerOnScroll?: boolean;
@@ -19,6 +25,7 @@ interface TextRevealProps {
 export default function TextReveal({
   children,
   className = "",
+  wrapperClassName = "",
   delay = 0,
   duration = 1.2,
   triggerOnScroll = true,
@@ -40,24 +47,24 @@ export default function TextReveal({
 
     let split: SplitType | null = null;
     let tl: gsap.core.Timeline | null = null;
+    let scrollTrigger: ScrollTrigger | null = null;
+    let hasAnimated = false;
 
     const animate = () => {
-      if (!textRef.current || !containerRef.current) return;
+      if (hasAnimated || !textRef.current || !containerRef.current) return;
+      hasAnimated = true;
 
       try {
-        // Make visible immediately
         if (containerRef.current) {
           containerRef.current.style.opacity = "1";
         }
 
-        // Split text
         split = new SplitType(textRef.current, {
           types: "lines",
           lineClass: "line-mask",
         });
 
         if (split.lines && split.lines.length > 0) {
-          // Wrap each line
           split.lines.forEach((line: Element) => {
             const wrapper = document.createElement("div");
             wrapper.style.overflow = "hidden";
@@ -69,12 +76,9 @@ export default function TextReveal({
             }
           });
 
-          // Calculate delay
           const totalDelay = waitForPageTransition ? 1.4 + delay : delay;
 
-          // Create timeline
           tl = gsap.timeline();
-          
           tl.set(split.lines, { y: "100%" })
             .to(split.lines, {
               y: "0%",
@@ -86,25 +90,35 @@ export default function TextReveal({
         }
       } catch (error) {
         console.error("TextReveal animation error:", error);
-        // Fallback: just show the text
         if (containerRef.current) {
           containerRef.current.style.opacity = "1";
         }
       }
     };
 
-    // Small delay to ensure DOM is ready
-    const timer = setTimeout(animate, 50);
+    let timer: ReturnType<typeof setTimeout> | null = null;
+
+    if (triggerOnScroll) {
+      scrollTrigger = ScrollTrigger.create({
+        trigger: containerRef.current,
+        start: scrollStart,
+        once: true,
+        onEnter: animate,
+      });
+    } else {
+      timer = setTimeout(animate, 50);
+    }
 
     return () => {
-      clearTimeout(timer);
+      if (timer) clearTimeout(timer);
+      if (scrollTrigger) scrollTrigger.kill();
       if (tl) tl.kill();
       if (split) split.revert();
     };
-  }, [mounted, delay, duration, stagger, lineHeight, waitForPageTransition]);
+  }, [mounted, delay, duration, stagger, lineHeight, waitForPageTransition, triggerOnScroll, scrollStart]);
 
   return (
-    <div ref={containerRef} style={{ opacity: 0 }}>
+    <div ref={containerRef} className={wrapperClassName} style={{ opacity: 0 }}>
       <div ref={textRef} className={className} style={{ lineHeight }}>
         {children}
       </div>

@@ -6,7 +6,7 @@ export default function AboutThird() {
       >
         <div className="text-center">
           <h1 className="text-5xl font-bold mb-4">AboutThird</h1>
-          <p className="text-xl">Light mode section</p>
+          <p className="text-xl">A simple, consistent section layout.</p>
         </div>
       </section>
     );

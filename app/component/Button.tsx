@@ -8,21 +8,34 @@ type ButtonVariant = "light" | "dark";
 interface ExplorePanelsButtonProps {
   onClick?: () => void;
   href?: string;
+  target?: React.HTMLAttributeAnchorTarget;
+  rel?: string;
   children?: React.ReactNode;
   variant?: ButtonVariant;
   className?: string;
+  textClassName?: string;
+  textContainerClassName?: string;
+  iconBoxClassName?: string;
+  showIcon?: boolean;
+  animateText?: boolean;
 }
 
 const ExplorePanelsButton = ({ 
   onClick, 
   href,
+  target,
+  rel,
   children = "Explore Panels",
   variant = "dark",
-  className = ""
+  className = "",
+  textClassName = "",
+  textContainerClassName = "",
+  iconBoxClassName = "",
+  showIcon = true,
+  animateText = true
 }: ExplorePanelsButtonProps) => {
   const buttonRef = useRef<HTMLAnchorElement | HTMLButtonElement>(null);
   const iconBoxRef = useRef<HTMLDivElement>(null);
-  const arrowRef = useRef<SVGSVGElement>(null);
   const textContainerRef = useRef<HTMLDivElement>(null);
   const textTopRef = useRef<HTMLSpanElement>(null);
   const textBottomRef = useRef<HTMLSpanElement>(null);
@@ -30,40 +43,22 @@ const ExplorePanelsButton = ({
   useEffect(() => {
     const button = buttonRef.current;
     const iconBox = iconBoxRef.current;
-    const arrow = arrowRef.current;
-    const textTop = textTopRef.current;
-    const textBottom = textBottomRef.current;
 
-    if (!button || !iconBox || !arrow || !textTop || !textBottom) return;
-
-    // Set initial state for bottom text
-    gsap.set(textBottom, { y: "100%" });
+    if (!button) return;
+    if (showIcon && !iconBox) return;
 
     const tl = gsap.timeline({ paused: true });
 
-    tl.to(iconBox, {
-      scale: 1.05,
-      backgroundColor: variant === "dark" 
-        ? "hsl(28, 50%, 65%)" // Lighter accent on hover for dark
-        : "var(--color-black)", // Black on hover for light
-      duration: 0.3,
-      ease: "power2.out",
-    }, 0)
-    .to(arrow, {
-      x: "0.3vw",
-      duration: 0.3,
-      ease: "power2.out",
-    }, 0)
-    .to(textTop, {
-      y: "-100%",
-      duration: 0.3,
-      ease: "power2.out",
-    }, 0)
-    .to(textBottom, {
-      y: "0%",
-      duration: 0.3,
-      ease: "power2.out",
-    }, 0);
+    if (showIcon && iconBox) {
+      tl.to(iconBox, {
+        scale: 1.05,
+        backgroundColor: variant === "dark" 
+          ? "hsl(28, 50%, 65%)" // Lighter accent on hover for dark
+          : "var(--color-black)", // Black on hover for light
+        duration: 0.3,
+        ease: "power2.out",
+      }, 0);
+    }
 
     const handleMouseEnter = () => tl.play();
     const handleMouseLeave = () => tl.reverse();
@@ -76,7 +71,7 @@ const ExplorePanelsButton = ({
       button.removeEventListener("mouseleave", handleMouseLeave);
       tl.kill();
     };
-  }, [variant]);
+  }, [variant, showIcon, animateText]);
 
   // Variant styles
   const variantStyles = {
@@ -93,27 +88,37 @@ const ExplorePanelsButton = ({
   };
 
   const styles = variantStyles[variant];
-  const textStyles = `b1 font-light tracking-wide block ${styles.text}`;
+  const textStyles = `b1 font-light tracking-wide leading-[1] block ${styles.text} ${textClassName}`;
 
   const ButtonContent = () => (
     <>
-      <div
-        ref={textContainerRef}
-        className="relative overflow-hidden h-[2.5vw]"
-      >
-        <span ref={textTopRef} className={textStyles}>
-          {children}
-        </span>
-        <span ref={textBottomRef} className={`${textStyles} absolute top-0 left-0`}>
-          {children}
-        </span>
-      </div>
-      <div
-        ref={iconBoxRef}
-        className={`flex items-center justify-center w-[2vw] h-[2vw] ${styles.iconBox}`}
-      >
-
-      </div>
+      {animateText ? (
+        <div
+          ref={textContainerRef}
+          className={`relative overflow-hidden h-[1em] ${textContainerClassName}`}
+        >
+          <span
+            ref={textTopRef}
+            className={`${textStyles} transition-transform duration-300 ease-out group-hover:-translate-y-full`}
+          >
+            {children}
+          </span>
+          <span
+            ref={textBottomRef}
+            className={`${textStyles} absolute top-0 left-0 translate-y-full transition-transform duration-300 ease-out group-hover:translate-y-0`}
+          >
+            {children}
+          </span>
+        </div>
+      ) : (
+        <span className={textStyles}>{children}</span>
+      )}
+      {showIcon && (
+        <div
+          ref={iconBoxRef}
+          className={`flex items-center justify-center w-[2vw] h-[2vw] ${styles.iconBox} ${iconBoxClassName}`}
+        />
+      )}
     </>
   );
 
@@ -124,6 +129,8 @@ const ExplorePanelsButton = ({
       <a
         ref={buttonRef as React.RefObject<HTMLAnchorElement>}
         href={href}
+        target={target}
+        rel={rel}
         className={baseClasses}
       >
         <ButtonContent />

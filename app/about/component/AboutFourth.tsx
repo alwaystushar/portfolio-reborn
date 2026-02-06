@@ -6,7 +6,7 @@ export default function AboutFourth() {
       >
         <div className="text-center">
           <h1 className="text-5xl font-bold mb-4">AboutFourth</h1>
-          <p className="text-xl">This should be dark mode</p>
+          <p className="text-xl">Focused content with clear hierarchy.</p>
         </div>
       </section>
     );
