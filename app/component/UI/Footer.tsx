@@ -24,7 +24,7 @@ export default function Footer() {
 					<div className="col-span-12 grid grid-cols-4 gap-[5vw] text-[3.6vw] text-white/70 sm:grid-cols-2 sm:text-[2.4vw] lg:grid-cols-4 lg:text-[0.7vw]">
 						<div className="lg:space-y-[0.6vw] space-y-[3.6vw] flex flex-col">
 							<TransitionLink
-								href="mailto:tusharnegi.11.tn@gmail.com"
+								href="mailto:connect@alwaystushar.fyi"
 								variant="dark"
 								animateText={true}
 								textClassName="text-white/80"

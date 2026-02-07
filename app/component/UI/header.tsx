@@ -103,7 +103,7 @@ export default function Header() {
 
   const socialLinks = [
     { name: 'LinkedIn', href: 'https://www.linkedin.com/in/tusharux/' },
-    { name: 'Email', href: 'mailto:tusharnegi.11.tn@gmail.com' },
+    { name: 'Email', href: 'mailto:connect@alwaystushar.fyi' },
     { name: 'Instagram', href: 'https://www.instagram.com/alwaystushar/' },
   ];
 

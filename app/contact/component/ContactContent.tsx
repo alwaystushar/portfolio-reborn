@@ -29,7 +29,10 @@ export default function ContactContent() {
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
         setIsDropdownOpen(false);
       }
     };
@@ -37,16 +40,22 @@ export default function ContactContent() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const selectedLabel = projectOptions.find((opt) => opt.value === formData.project)?.label;
+  const selectedLabel = projectOptions.find(
+    (opt) => opt.value === formData.project,
+  )?.label;
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     try {
       const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
@@ -54,13 +63,23 @@ export default function ContactContent() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          access_key: "b267cd12-6ad7-4c39-ac3c-e07ec2fd3773",
+          access_key: "b84d6eab-f5e8-43a1-8dc5-8d84bf630dfc",
+
           name: formData.name,
-          email: formData.email,
-          project_type: selectedLabel || formData.project,
-          message: formData.message,
-          from_name: "Portfolio Contact Form",
-          subject: `New inquiry from ${formData.name} - ${selectedLabel || "Project"}`,
+          email: formData.email, // user email (keep this)
+
+          from_name: "Portfolio Contact",
+          from_email: "connect@alwaystushar.fyi", // MUST be your domain email
+
+          subject: `New inquiry from ${formData.name}`,
+          message: `
+Name: ${formData.name}
+Email: ${formData.email}
+Project: ${selectedLabel || formData.project}
+
+Message:
+${formData.message}
+  `,
         }),
       });
 
@@ -108,8 +127,9 @@ export default function ContactContent() {
             waitForPageTransition={true}
             delay={0.3}
           >
-            Whether you have a project in mind, a wild idea that needs shaping, 
-            or just want to say hi—I'm all ears. Great things start with a conversation.
+            Whether you have a project in mind, a wild idea that needs shaping,
+            or just want to say hi—I'm all ears. Great things start with a
+            conversation.
           </TextReveal>
         </div>
 
@@ -123,9 +143,9 @@ export default function ContactContent() {
           >
             Drop me a line
           </TextReveal>
-          
-          <a 
-            href="mailto:tusharnegi.11.tn@gmail.com"
+
+          <a
+            href="mailto:connect@alwaystushar.fyi"
             className="group inline-flex items-center gap-[2vw] lg:gap-[1vw]"
           >
             <TextReveal
@@ -134,7 +154,7 @@ export default function ContactContent() {
               waitForPageTransition={true}
               delay={0.5}
             >
-              tusharnegi.11.tn@gmail.com
+              connect@alwaystushar.fyi
             </TextReveal>
             <ArrowUpRight className="w-[6vw] h-[6vw] lg:w-[2vw] lg:h-[2vw] group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
           </a>
@@ -150,11 +170,14 @@ export default function ContactContent() {
             Or fill this out
           </TextReveal>
 
-          <form onSubmit={handleSubmit} className="grid lg:grid-cols-2 gap-[6vw] lg:gap-[2vw]">
+          <form
+            onSubmit={handleSubmit}
+            className="grid lg:grid-cols-2 gap-[6vw] lg:gap-[2vw]"
+          >
             {/* Name Field */}
             <div className="relative">
-              <label 
-                htmlFor="name" 
+              <label
+                htmlFor="name"
                 className="block text-[3vw] lg:text-[0.7vw] uppercase tracking-[0.2vw] text-black/40 mb-[2vw] lg:mb-[0.8vw]"
               >
                 Your Name
@@ -173,8 +196,8 @@ export default function ContactContent() {
 
             {/* Email Field */}
             <div className="relative">
-              <label 
-                htmlFor="email" 
+              <label
+                htmlFor="email"
                 className="block text-[3vw] lg:text-[0.7vw] uppercase tracking-[0.2vw] text-black/40 mb-[2vw] lg:mb-[0.8vw]"
               >
                 Your Email
@@ -193,12 +216,10 @@ export default function ContactContent() {
 
             {/* Project Type Field - Custom Dropdown */}
             <div className="relative lg:col-span-2" ref={dropdownRef}>
-              <label 
-                className="block text-[3vw] lg:text-[0.7vw] uppercase tracking-[0.2vw] text-black/40 mb-[2vw] lg:mb-[0.8vw]"
-              >
+              <label className="block text-[3vw] lg:text-[0.7vw] uppercase tracking-[0.2vw] text-black/40 mb-[2vw] lg:mb-[0.8vw]">
                 Project Type
               </label>
-              
+
               {/* Dropdown Trigger */}
               <button
                 type="button"
@@ -207,21 +228,23 @@ export default function ContactContent() {
                   isDropdownOpen ? "border-black" : "border-black/20"
                 }`}
               >
-                <span className={selectedLabel ? "text-black" : "text-black/30"}>
+                <span
+                  className={selectedLabel ? "text-black" : "text-black/30"}
+                >
                   {selectedLabel || "Select a project type"}
                 </span>
-                <ChevronDown 
+                <ChevronDown
                   className={`w-[4vw] h-[4vw] lg:w-[1.2vw] lg:h-[1.2vw] text-black/40 transition-transform duration-300 ${
                     isDropdownOpen ? "rotate-180" : ""
-                  }`} 
+                  }`}
                 />
               </button>
 
               {/* Dropdown Menu */}
-              <div 
+              <div
                 className={`absolute left-0 right-0 top-full mt-[1vw] lg:mt-[0.4vw] bg-white border border-black/10 shadow-lg z-50 overflow-hidden transition-all duration-300 origin-top ${
-                  isDropdownOpen 
-                    ? "opacity-100 scale-y-100 translate-y-0" 
+                  isDropdownOpen
+                    ? "opacity-100 scale-y-100 translate-y-0"
                     : "opacity-0 scale-y-95 -translate-y-[1vw] pointer-events-none"
                 }`}
               >
@@ -234,12 +257,14 @@ export default function ContactContent() {
                       setIsDropdownOpen(false);
                     }}
                     className={`w-full text-left px-[4vw] py-[3vw] lg:px-[1vw] lg:py-[0.7vw] text-[4vw] lg:text-[0.9vw] transition-all duration-200 hover:bg-black hover:text-white ${
-                      formData.project === option.value 
-                        ? "bg-black/5 text-black" 
+                      formData.project === option.value
+                        ? "bg-black/5 text-black"
                         : "text-black/70"
                     }`}
                     style={{
-                      transitionDelay: isDropdownOpen ? `${index * 30}ms` : "0ms",
+                      transitionDelay: isDropdownOpen
+                        ? `${index * 30}ms`
+                        : "0ms",
                     }}
                   >
                     {option.label}
@@ -258,8 +283,8 @@ export default function ContactContent() {
 
             {/* Message Field */}
             <div className="relative lg:col-span-2">
-              <label 
-                htmlFor="message" 
+              <label
+                htmlFor="message"
                 className="block text-[3vw] lg:text-[0.7vw] uppercase tracking-[0.2vw] text-black/40 mb-[2vw] lg:mb-[0.8vw]"
               >
                 Tell me about your project
@@ -319,10 +344,7 @@ export default function ContactContent() {
               rel="noreferrer"
               className="text-[4vw] lg:text-[1.1vw] hover:text-black/70 transition-colors inline-flex items-center gap-[1vw]"
             >
-              <TextReveal
-                triggerOnScroll={true}
-                waitForPageTransition={true}
-              >
+              <TextReveal triggerOnScroll={true} waitForPageTransition={true}>
                 Message on WhatsApp
               </TextReveal>
               <ArrowUpRight className="w-[4vw] h-[4vw] lg:w-[1.2vw] lg:h-[1.2vw]" />
@@ -343,10 +365,7 @@ export default function ContactContent() {
               rel="noreferrer"
               className="text-[4vw] lg:text-[1.1vw] hover:text-black/70 transition-colors inline-flex items-center gap-[1vw]"
             >
-              <TextReveal
-                triggerOnScroll={true}
-                waitForPageTransition={true}
-              >
+              <TextReveal triggerOnScroll={true} waitForPageTransition={true}>
                 Connect on LinkedIn
               </TextReveal>
               <ArrowUpRight className="w-[4vw] h-[4vw] lg:w-[1.2vw] lg:h-[1.2vw]" />
@@ -367,10 +386,7 @@ export default function ContactContent() {
               rel="noreferrer"
               className="text-[4vw] lg:text-[1.1vw] hover:text-black/70 transition-colors inline-flex items-center gap-[1vw]"
             >
-              <TextReveal
-                triggerOnScroll={true}
-                waitForPageTransition={true}
-              >
+              <TextReveal triggerOnScroll={true} waitForPageTransition={true}>
                 Follow on Instagram
               </TextReveal>
               <ArrowUpRight className="w-[4vw] h-[4vw] lg:w-[1.2vw] lg:h-[1.2vw]" />
