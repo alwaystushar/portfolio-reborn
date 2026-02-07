@@ -86,7 +86,7 @@ description:
   "I approach financial digital products with clarity, responsibility, and precision. Working with Decline, my focus was on creating secure, intuitive, and trustworthy digital experiences that simplify complex banking interactions while maintaining the confidence and credibility expected from a Saudi financial institution.",
 ideation:
   "My approach for Decline was rooted in understanding user trust, regulatory expectations, and operational clarity. Each design decision balanced usability with security, translating complex financial workflows into clear, structured interfaces. Through thoughtful UI/UX and scalable development, I delivered a web app and website that support seamless user journeys, reinforce trust, and reflect the bank’s commitment to modern, reliable digital banking experiences.",
-gallery: ["/img/decline/1.jpg", "/img/decline/en.jpg", "/img/decline/en-dasg.jpg", "/img/decline/ar.jpg", "/img/decline/ar-dasg.jpg"],
+gallery: ["/img/decline/1.jpg", "/img/decline/en.jpg", "/img/decline/en-dash.jpg", "/img/decline/ar.jpg", "/img/decline/ar-dash.jpg"],
 	},
 	{
 		slug: "mtfi",

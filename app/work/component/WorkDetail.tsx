@@ -1,8 +1,7 @@
 "use client";
 
+import Image from "next/image";
 import TextReveal from "@/app/component/TextReveal";
-import ImageReveal from "@/app/component/ImageReveal";
-import TransitionLink from "@/app/component/TransitionLink";
 import { WorkItem } from "@/app/work/workData";
 
 interface WorkDetailProps {
@@ -53,12 +52,15 @@ export default function WorkDetail({ item }: WorkDetailProps) {
 				</div>
 
 				{/* Hero Image */}
-				<div className="mt-[8vw] lg:mt-[4vw] h-[70vw] lg:h-[45vw] w-full overflow-hidden bg-[#d9d9d9]">
-					<ImageReveal
+				<div className="mt-[8vw] lg:mt-[4vw] w-full overflow-hidden bg-[#d9d9d9] relative">
+					<Image
 						src={item.image}
 						alt={item.title}
-						dir="left"
-						maskColor="#f2f3f4"
+						width={1920}
+						height={1080}
+						className="w-full h-auto object-cover"
+						sizes="100vw"
+						priority
 					/>
 				</div>
 
@@ -92,13 +94,15 @@ export default function WorkDetail({ item }: WorkDetailProps) {
 						{item.gallery.map((src, index) => (
 							<div
 								key={`${item.slug}-gallery-${index}`}
-								className="h-[70vw] lg:h-[45vw] w-full overflow-hidden bg-[#d9d9d9]"
+								className="w-full overflow-hidden bg-[#d9d9d9] relative"
 							>
-								<ImageReveal
+								<Image
 									src={src}
 									alt={`${item.title} gallery`}
-									dir="bottom"
-									maskColor="#f2f3f4"
+									width={1920}
+									height={1080}
+									className="w-full h-auto object-cover"
+									sizes="100vw"
 								/>
 							</div>
 						))}

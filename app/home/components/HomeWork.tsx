@@ -70,10 +70,10 @@ export default function HomeWork() {
 					</div>
 
 					<div className="lg:col-span-4">
-						<TransitionLink href="/work" className="block">
+						<TransitionLink href="/work/decline" className="block">
 							<div className="h-[55vw] overflow-hidden bg-[#d9d9d9] lg:h-[18vw] ">
 								<ImageReveal
-									src="/img/home-img.webp"
+									src="/img/decline/1.jpg"
 									alt="Work preview"
 									dir="left"
 									maskColor="#f2f3f4"
@@ -86,14 +86,14 @@ export default function HomeWork() {
 								triggerOnScroll={true}
 								waitForPageTransition={false}
 							>
-								Name
+								Decline
 							</TextReveal>
 							<TextReveal
 								className="text-[2.6vw] text-gray-600 lg:text-[0.9vw]"
 								triggerOnScroll={true}
 								waitForPageTransition={false}
 							>
-								Something Something
+								Product Design
 							</TextReveal>
 						</div>
 					</div>
