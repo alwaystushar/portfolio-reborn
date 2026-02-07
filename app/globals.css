@@ -30,6 +30,10 @@
   }
 }
 
+.cursor-pointer{
+  cursor: none;
+}
+
 
 #banner-1, #banner-2, #banner-3, #banner-4 {
   background: #000000;
