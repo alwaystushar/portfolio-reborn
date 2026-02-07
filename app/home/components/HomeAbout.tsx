@@ -90,7 +90,7 @@ Every product I build starts with understanding user goals and translating them 
         <div className="col-span-12 mt-[4vw] lg:col-span-5 lg:mt-0">
           <div className="h-[70vw] w-full sm:h-[50vw] lg:h-[28vw]">
             <ImageReveal
-              src="/img/mypic-home.png"
+              src="/img/mypic-home.webp"
               alt="Profile"
               dir="left"
               maskColor="var(--color-white)"

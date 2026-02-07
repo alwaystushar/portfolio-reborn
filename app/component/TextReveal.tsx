@@ -29,9 +29,9 @@ export default function TextReveal({
   delay = 0,
   duration = 1.2,
   triggerOnScroll = true,
-  stagger = 0.1,
+  stagger = 0.08,
   lineHeight = "1.2",
-  scrollStart = "top 85%",
+  scrollStart = "top 90%",
   waitForPageTransition = true,
 }: TextRevealProps) {
   const textRef = useRef<HTMLDivElement>(null);
@@ -76,7 +76,7 @@ export default function TextReveal({
             }
           });
 
-          const totalDelay = waitForPageTransition ? 1.4 + delay : delay;
+          const totalDelay = waitForPageTransition ? 0.6 + delay : delay;
 
           tl = gsap.timeline();
           tl.set(split.lines, { y: "100%" })

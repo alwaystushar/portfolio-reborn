@@ -11,6 +11,10 @@ if (typeof window !== 'undefined') {
 
 export default function SmoothScroll({ children }: { children: React.ReactNode }) {
   useEffect(() => {
+    if (typeof window !== 'undefined' && window.innerWidth <= 768) {
+      return;
+    }
+
     // Initialize Lenis with premium, tighter scroll settings
     // const lenis = new Lenis({
     //   duration: 1.5,
@@ -34,7 +38,7 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
         orientation: 'vertical',
         gestureOrientation: 'vertical',
         smoothWheel: true,
-        wheelMultiplier: 0.6,  // Even tighter
+        wheelMultiplier: 0.8,  // Even tighter
         touchMultiplier: 1.2,   // Even more controlled
         infinite: false,
         autoResize: true,

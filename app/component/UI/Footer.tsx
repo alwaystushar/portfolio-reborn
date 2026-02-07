@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import Button from "@/app/component/Button";
+import TransitionLink from "@/app/component/TransitionLink";
 
 export default function Footer() {
 	useEffect(() => {
@@ -23,64 +23,62 @@ export default function Footer() {
 				<div className="grid girder w-full px-[4vw] pt-[6vw] pb-[8vw] lg:pt-[4vw] lg:pb-[6vw]">
 					<div className="col-span-12 grid grid-cols-4 gap-[5vw] text-[3.6vw] text-white/70 sm:grid-cols-2 sm:text-[2.4vw] lg:grid-cols-4 lg:text-[0.7vw]">
 						<div className="lg:space-y-[0.6vw] space-y-[3.6vw] flex flex-col">
-							<Button
+							<TransitionLink
 								href="mailto:tusharnegi.11.tn@gmail.com"
 								variant="dark"
-								showIcon={false}
+								animateText={true}
 								textClassName="text-white/80"
 								className="hover:text-white"
 							>
 								Email
-							</Button>
-							<Button
+							</TransitionLink>
+							<TransitionLink
 								href="https://wa.me/8171839997"
 								target="_blank"
 								rel="noreferrer"
 								variant="dark"
-								showIcon={false}
+								animateText={true}
 								textClassName="text-white/80"
 								className="hover:text-white"
 							>
 								Whatsapp
-							</Button>
+							</TransitionLink>
 						</div>
 						<div className="lg:space-y-[0.6vw] space-y-[3.6vw] flex flex-col">
-							<Button href="/" variant="dark" showIcon={false} textClassName="text-white/80" className="hover:text-white">
+							<TransitionLink href="/" variant="dark" textClassName="text-white/80" className="hover:text-white">
 								Home
-							</Button>
-							<Button href="/about" variant="dark" showIcon={false} textClassName="text-white/80" className="hover:text-white">
+							</TransitionLink>
+							<TransitionLink href="/about" variant="dark" textClassName="text-white/80" className="hover:text-white">
 								About
-							</Button>
-							<Button href="/work" variant="dark" showIcon={false} textClassName="text-white/80" className="hover:text-white">
+							</TransitionLink>
+							<TransitionLink href="/work" variant="dark" textClassName="text-white/80" className="hover:text-white">
 								Work
-							</Button>
-							<Button href="/contact" variant="dark" showIcon={false} textClassName="text-white/80" className="hover:text-white">
+							</TransitionLink>
+							<TransitionLink href="/contact" variant="dark" textClassName="text-white/80" className="hover:text-white">
 								Contact
-							</Button>
+							</TransitionLink>
 						</div>
 						<div className="lg:space-y-[0.6vw] space-y-[3.6vw] flex flex-col">
-							<Button
+							<TransitionLink
 								href="https://www.instagram.com/alwaystushar/"
 								target="_blank"
 								rel="noreferrer"
 								variant="dark"
-								showIcon={false}
 								textClassName="text-white/80"
 								className="hover:text-white"
 							>
 								Instagram
-							</Button>
-							<Button
+							</TransitionLink>
+							<TransitionLink
 								href="https://www.linkedin.com/in/tusharux/"
 								target="_blank"
 								rel="noreferrer"
 								variant="dark"
-								showIcon={false}
 								textClassName="text-white/80"
 								className="hover:text-white"
 							>
 								Linkedin
-							</Button>
+							</TransitionLink>
 						</div>
 						<div className="text-left text-white/60 lg:text-right">India, Delhi</div>
 					</div>

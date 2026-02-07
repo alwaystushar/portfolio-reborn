@@ -31,25 +31,31 @@ export const animatePageOut = (href: string, router: AppRouterInstance) => {
     document.getElementById('banner-4'),
   ];
 
-  if (banners.every(banner => banner)) {
-    const tl = gsap.timeline();
+  const bannersReady = banners.every(banner => banner);
 
-    tl.set(banners, {
-      yPercent: -100,
-    }).to(banners, {
-      yPercent: 0,
-      stagger: 0.15,
-      duration: 1,
-      ease: 'power4.inOut',
-      onComplete: () => {
-        // Scroll to top before navigation
-        window.scrollTo(0, 0);
-        
-        // Small delay to ensure content is ready
-        setTimeout(() => {
-          router.push(href);
-        }, 150);
-      },
-    });
+  if (!bannersReady) {
+    window.scrollTo(0, 0);
+    router.push(href);
+    return;
   }
+
+  const tl = gsap.timeline();
+
+  tl.set(banners, {
+    yPercent: -100,
+  }).to(banners, {
+    yPercent: 0,
+    stagger: 0.15,
+    duration: 1,
+    ease: 'power4.inOut',
+    onComplete: () => {
+      // Scroll to top before navigation
+      window.scrollTo(0, 0);
+      
+      // Small delay to ensure content is ready
+      setTimeout(() => {
+        router.push(href);
+      }, 150);
+    },
+  });
 };

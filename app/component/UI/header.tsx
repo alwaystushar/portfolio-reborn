@@ -9,9 +9,29 @@ import { ArrowUpRight } from 'lucide-react';
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [currentTime, setCurrentTime] = useState('');
   const menuOverlayRef = useRef<HTMLDivElement>(null);
   const menuItemsRef = useRef<(HTMLAnchorElement | null)[]>([]);
   const socialLinksRef = useRef<(HTMLAnchorElement | null)[]>([]);
+
+  // Update time every second
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      const indiaTime = now.toLocaleTimeString('en-IN', {
+        timeZone: 'Asia/Kolkata',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+      });
+      setCurrentTime(indiaTime);
+    };
+    
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -75,6 +95,7 @@ export default function Header() {
   }, [isMenuOpen]);
 
   const menuItems = [
+    { name: 'Home', href: '/' },
     { name: 'About', href: '/about' },
     { name: 'Work', href: '/work' },
     { name: 'Contact', href: '/contact' },
@@ -94,11 +115,9 @@ export default function Header() {
         <div className="grid girder gap-0 w-full px-[4vw]">
           {/* Logo */}
           <div className="col-span-2 lg:col-span-3 flex items-start">
-            <Link href="/">
-              <h1 className="cursor-pointer">
-                <img src="logo.svg" className='lg:w-[6vw]' alt="" />
-              </h1>
-            </Link>
+            <TransitionLink href="/" className="cursor-pointer">
+              <img src="/logo.svg" className='lg:w-[6vw]' alt="" />
+            </TransitionLink>
           </div>
 
           {/* Desktop Navigation */}
@@ -118,7 +137,7 @@ export default function Header() {
                 ))}
               </div>
 
-              <div className="hidden lg:flex lg:col-span-3 items-center justify-end gap-[0.1vw] flex-col items-start">
+              <div className="hidden lg:flex lg:col-span-3 items-center justify-start gap-[0.1vw] flex-col items-start">
                 {socialLinks.map((link) => (
                   <TransitionLink  
                     key={link.name}
@@ -138,7 +157,7 @@ export default function Header() {
               </div>
 
               <div className="">
-                <span className="text-[0.8vw] font-light">Local 20:58</span>
+                <span className="text-[0.8vw] font-light">Local {currentTime}</span>
               </div>                
               </div>
 

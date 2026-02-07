@@ -6,22 +6,22 @@ import TransitionLink from "@/app/component/TransitionLink";
 
 const workItems = [
 	{
-		title: "Name",
-		subtitle: "Something Something",
-		image: "/img/ramtan.png",
-		href: "/work",
+		title: "Tanmiah",
+		subtitle: "UI/UX Design | Development",
+		image: "/img/tanmiah/1.png",
+		href: "/work/tanmiah",
 	},
 	{
-		title: "Name",
-		subtitle: "Something Something",
-		image: "/img/ramtan.png",
-		href: "/work",
+		title: "ramtan",
+		subtitle: "UI/UX Design | Development",
+		image: "/img/ramtan/ramtan.webp",
+		href: "/work/ramtan",
 	},
 	{
-		title: "Name",
-		subtitle: "Something Something",
-		image: "/img/ramtan.png",
-		href: "/work",
+		title: "Stefani",
+		subtitle: "Brand Identity | UI/UX Design | Development",
+		image: "/img/stefani/0.jpg",
+		href: "/work/stefani",
 	},
 ];
 
@@ -42,9 +42,9 @@ export default function HomeWork() {
 				<div className="col-span-12 grid grid-cols-1 gap-[7.5vw] lg:gap-[1.5vw] lg:grid-cols-12">
 					<div className="lg:col-span-8">
 						<TransitionLink href="/work" className="block">
-							<div className="h-[55vw] overflow-hidden bg-[#d9d9d9] lg:h-[35vw]">
+							<div className="h-[55vw] overflow-hidden bg-[#d9d9d9] lg:h-[55vw]">
 								<ImageReveal
-									src="/img/ramtan.png"
+									src="/img/secuirtyapp/0.png"
 									alt="Work preview"
 									dir="right"
 									maskColor="#f2f3f4"
@@ -57,14 +57,14 @@ export default function HomeWork() {
 								triggerOnScroll={true}
 								waitForPageTransition={false}
 							>
-								Name
+								Cyber Security
 							</TextReveal>
 							<TextReveal
 								className="text-right text-[2.6vw] text-gray-600 lg:text-[0.9vw]"
 								triggerOnScroll={true}
 								waitForPageTransition={false}
 							>
-								Something Something
+								Product Design
 							</TextReveal>
 						</div>
 					</div>
@@ -73,7 +73,7 @@ export default function HomeWork() {
 						<TransitionLink href="/work" className="block">
 							<div className="h-[55vw] overflow-hidden bg-[#d9d9d9] lg:h-[18vw] ">
 								<ImageReveal
-									src="/img/home-img.png"
+									src="/img/home-img.webp"
 									alt="Work preview"
 									dir="left"
 									maskColor="#f2f3f4"

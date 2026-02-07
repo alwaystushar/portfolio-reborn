@@ -1,10 +1,7 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
 
 type RevealDirection = "left" | "right" | "top" | "bottom";
 
@@ -16,6 +13,7 @@ interface ImageRevealProps {
   imgClassName?: string;
   maskColor?: string;
   duration?: number;
+  waitForPageTransition?: boolean;
 }
 
 export default function ImageReveal({
@@ -25,99 +23,114 @@ export default function ImageReveal({
   className = "",
   imgClassName = "",
   maskColor = "var(--color-grey)",
-  duration = 1.2,
+  duration = 1,
+  waitForPageTransition = true,
 }: ImageRevealProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const maskRef = useRef<HTMLDivElement>(null);
-  const revealRef = useRef<() => void>(() => {});
+  const imgRef = useRef<HTMLImageElement>(null);
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [transitionDone, setTransitionDone] = useState(!waitForPageTransition);
   const revealedRef = useRef(false);
 
+  // Check if image is already loaded (cached)
+  useEffect(() => {
+    const img = imgRef.current;
+    if (img && img.complete && img.naturalHeight !== 0) {
+      setImageLoaded(true);
+    }
+  }, []);
+
+  // Wait for page transition
+  useEffect(() => {
+    if (!waitForPageTransition) return;
+    const timer = setTimeout(() => {
+      setTransitionDone(true);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [waitForPageTransition]);
+
+  // Intersection Observer for visibility
   useEffect(() => {
     const container = containerRef.current;
-    const mask = maskRef.current;
+    if (!container) return;
 
-    if (!container || !mask) return;
+    // Check if already visible (for page refresh scenarios)
+    const rect = container.getBoundingClientRect();
+    const isAlreadyVisible =
+      rect.top < window.innerHeight + 100 && rect.bottom > 0;
 
-    const ctx = gsap.context(() => {
-      // Set initial mask position based on direction
-      const initialTransform = {
-        left: { x: "0%" },
-        right: { x: "0%" },
-        top: { y: "0%" },
-        bottom: { y: "0%" },
-      };
+    if (isAlreadyVisible) {
+      setIsVisible(true);
+      return;
+    }
 
-      const finalTransform = {
-        left: { x: "-100%" },
-        right: { x: "100%" },
-        top: { y: "-100%" },
-        bottom: { y: "100%" },
-      };
-
-      const reveal = () => {
-        if (revealedRef.current) return;
-        revealedRef.current = true;
-        gsap.to(mask, {
-          ...finalTransform[dir],
-          duration: duration,
-          ease: "power2.inOut",
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+            observer.disconnect();
+          }
         });
-      };
+      },
+      { threshold: 0.1, rootMargin: "0px 0px 100px 0px" }
+    );
 
-      revealRef.current = reveal;
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, []);
 
-      gsap.set(mask, initialTransform[dir]);
+  // Trigger reveal when all conditions are met
+  useEffect(() => {
+    const mask = maskRef.current;
+    if (!mask || revealedRef.current) return;
+    if (!imageLoaded || !isVisible || !transitionDone) return;
 
-      const trigger = ScrollTrigger.create({
-        trigger: container,
-        start: "top 90%",
-        once: true,
-        onEnter: reveal,
-      });
+    revealedRef.current = true;
 
-      const isInView = () => {
-        const rect = container.getBoundingClientRect();
-        const viewH = window.innerHeight || document.documentElement.clientHeight;
-        return rect.top <= viewH * 0.9 && rect.bottom >= viewH * 0.1;
-      };
-
-      const refreshTimer = setTimeout(() => {
-        ScrollTrigger.refresh();
-        if (isInView()) reveal();
-      }, 50);
-
-      const fallbackTimer = setTimeout(() => {
-        reveal();
-      }, 600);
-
-      return () => {
-        clearTimeout(refreshTimer);
-        clearTimeout(fallbackTimer);
-        trigger.kill();
-      };
-    }, containerRef);
-
-    return () => {
-      ctx.revert();
+    const finalTransform = {
+      left: { x: "-100%" },
+      right: { x: "100%" },
+      top: { y: "-100%" },
+      bottom: { y: "100%" },
     };
-  }, [dir, duration]);
+
+    gsap.to(mask, {
+      ...finalTransform[dir],
+      duration: duration,
+      ease: "power2.inOut",
+    });
+  }, [imageLoaded, isVisible, transitionDone, dir, duration]);
+
+  // Set initial mask position
+  useEffect(() => {
+    const mask = maskRef.current;
+    if (!mask) return;
+
+    const initialTransform = {
+      left: { x: "0%" },
+      right: { x: "0%" },
+      top: { y: "0%" },
+      bottom: { y: "0%" },
+    };
+
+    gsap.set(mask, initialTransform[dir]);
+  }, [dir]);
 
   return (
     <div
       ref={containerRef}
       className={`relative w-full h-full overflow-hidden ${className}`}
     >
-      {/* Image */}
       <img
+        ref={imgRef}
         src={src}
         alt={alt}
         className={`block h-full w-full min-h-full min-w-full object-cover object-center ${imgClassName}`}
-        onLoad={() => {
-          revealRef.current();
-        }}
+        onLoad={() => setImageLoaded(true)}
       />
-
-      {/* Reveal Mask */}
       <div
         ref={maskRef}
         className="absolute inset-0 z-10 pointer-events-none"

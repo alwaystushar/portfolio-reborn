@@ -1,12 +1,11 @@
 'use client';
 import TransitionLink from '@/app/component/TransitionLink';
 import TextReveal from '@/app/component/TextReveal';
-import Button from '@/app/component/Button';
 import { ArrowUpRight } from 'lucide-react';
 export default function HeroSection() {
   return (
     <section 
-      className="relative min-h-screen overflow-hidden bg-[#f7f8f9] isolate"
+      className="relative lg:min-h-screen min-h-[110vh] overflow-hidden bg-[#f7f8f9] isolate"
     >
       <video
         autoPlay
@@ -15,7 +14,7 @@ export default function HeroSection() {
         playsInline
         className="absolute inset-0 h-full w-full object-cover"
       >
-        <source src="/video/intro-video-light.mp4" type="video/mp4" />
+        <source src="/video/intro-video-light.webm" type="video/mp4" />
       </video>
       <div className="absolute inset-0 bg-white/0" aria-hidden="true" />
       <div className="relative z-10 mx-auto grid lg:min-h-screen h-[100vh] w-full grid-cols-1 items-start gap-[4vw] px-[4vw] lg:pt-[10vw] pt-[30vw] pb-[6vw] sm:pt-[8vw] lg:grid-cols-12 lg:pb-[3vw]">
@@ -68,13 +67,13 @@ export default function HeroSection() {
             <div>
               <ul className="space-y-[1vw] lg:text-start text-end sm:space-y-[0.6vw] lg:space-y-[0.2vw]">
                 <li><TextReveal triggerOnScroll={false} waitForPageTransition={true} duration={1.1}>Project Design</TextReveal></li>
-                <li><TextReveal triggerOnScroll={false} waitForPageTransition={true} duration={1.1}>UI/UX Design</TextReveal></li>
-                <li><TextReveal triggerOnScroll={false} waitForPageTransition={true} duration={1.1}>Brand Design</TextReveal></li>
-                <li><TextReveal triggerOnScroll={false} waitForPageTransition={true} duration={1.1}>Frontend Development</TextReveal></li>
-                <li><TextReveal triggerOnScroll={false} waitForPageTransition={true} duration={1.1}>Webflow Development</TextReveal></li>
-                <li><TextReveal triggerOnScroll={false} waitForPageTransition={true} duration={1.1}>Framer Development</TextReveal></li>
-                <li><TextReveal triggerOnScroll={false} waitForPageTransition={true} duration={1.1}>Shopify Development</TextReveal></li>
-                <li><TextReveal triggerOnScroll={false} waitForPageTransition={true} duration={1.1}>WordPress Development</TextReveal></li>
+                <li><TextReveal triggerOnScroll={false} waitForPageTransition={true} duration={1.3}>UI/UX Design</TextReveal></li>
+                <li><TextReveal triggerOnScroll={false} waitForPageTransition={true} duration={1.5}>Brand Design</TextReveal></li>
+                <li><TextReveal triggerOnScroll={false} waitForPageTransition={true} duration={1.7}>Frontend Development</TextReveal></li>
+                <li><TextReveal triggerOnScroll={false} waitForPageTransition={true} duration={1.9}>Webflow Development</TextReveal></li>
+                <li><TextReveal triggerOnScroll={false} waitForPageTransition={true} duration={2.1}>Framer Development</TextReveal></li>
+                <li><TextReveal triggerOnScroll={false} waitForPageTransition={true} duration={2.3}>Shopify Development</TextReveal></li>
+                <li><TextReveal triggerOnScroll={false} waitForPageTransition={true} duration={2.5}>WordPress Development</TextReveal></li>
               </ul>
             </div>
 
@@ -90,7 +89,7 @@ export default function HeroSection() {
               <div className="overflow-hidden border-[0.2vw] border-white bg-white lg:w-full w-[80vw]">
                 <div className="h-[48vw] w-full overflow-hidden lg:h-[10vw]">
                   <img
-                    src="/img/ramtan.png"
+                    src="/img/ramtan/ramtan.webp"
                     alt="Recent work preview"
                     className="h-full w-full object-cover"
                   />
@@ -105,7 +104,7 @@ export default function HeroSection() {
                     Exhibitions & Conferences in Saudi Arabia
                   </TextReveal>
                   <TransitionLink
-                    href="/work"
+                    href="/work/ramtan"
                     variant="light"
                     textClassName="inline-flex items-center gap-[0.3vw]"
                     className="gap-[0.3vw] text-[2.4vw] text-black sm:text-[1.6vw] lg:text-[0.75vw]"

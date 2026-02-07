@@ -16,12 +16,12 @@ const services = [
 export default function HomeServices() {
 	const serviceImages = useMemo(
 		() => [
-			"/img/home-img.png",
-			"/img/intro-img-light.png",
-			"/img/intro-img-dark.png",
-			"/img/mypic-home.png",
-			"/img/intro-img-light.png",
-			"/img/home-img.png",
+			"/img/secuirtyapp/0.png",
+			"/img/ramtan/ramtan.webp",
+			"/img/majed-alraijhi/0.png",
+			"/img/decline/1.jpg",
+			"/img/stefani/0.jpg",
+			"/img/mtfi/1.jpg",
 		],
 		[]
 	);
@@ -81,7 +81,7 @@ In an ever-changing digital landscape, I create solutions that help brands move 
 					<div className="relative mt-[6vw] h-[48vw] w-[92vw] lg:w-[35vw] lg:mt-0 lg:h-[25vw]">
 						<div className="lg:absolute lg:right-[20vw] lg:top-[6vw] h-full lg:h-[15vw] w-full">
 							<ImageReveal
-								src="/img/home-img.png"
+								src="/img/home-img.webp"
 								alt="Service highlight"
 								dir="right"
 								maskColor="rgba(2, 1, 11, 1)"
