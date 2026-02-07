@@ -41,7 +41,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://tusharnegi.com",
+    url: "https://www.alwaystushar.fyi/",
     siteName: "Tushar Negi",
     title: "Tushar Negi | Product Designer & Frontend Developer",
     description:
