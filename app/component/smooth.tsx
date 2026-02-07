@@ -90,6 +90,7 @@ export function SmoothCursor({
   },
 }: SmoothCursorProps) {
   const [isMoving, setIsMoving] = useState(false)
+  const [isTouch, setIsTouch] = useState(false)
   const lastMousePos = useRef<Position>({ x: 0, y: 0 })
   const velocity = useRef<Position>({ x: 0, y: 0 })
   const lastUpdateTime = useRef(Date.now())
@@ -110,6 +111,16 @@ export function SmoothCursor({
   })
 
   useEffect(() => {
+    // Detect touch devices
+    const handleTouch = () => setIsTouch(true);
+    window.addEventListener('touchstart', handleTouch, { once: true });
+    return () => {
+      window.removeEventListener('touchstart', handleTouch);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isTouch) return;
     const updateVelocity = (currentPos: Position) => {
       const currentTime = Date.now()
       const deltaTime = currentTime - lastUpdateTime.current
@@ -178,7 +189,9 @@ export function SmoothCursor({
       document.body.style.cursor = "auto"
       if (rafId) cancelAnimationFrame(rafId)
     }
-  }, [cursorX, cursorY, rotation, scale])
+  }, [cursorX, cursorY, rotation, scale, isTouch])
+
+  if (isTouch) return null;
 
   return (
     <motion.div
